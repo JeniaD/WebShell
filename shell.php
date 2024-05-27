@@ -27,12 +27,11 @@
                 $path_parts = explode('/', trim($CURRENT_DIR));
                 $total_path = "";
                 foreach ($path_parts as $dir) {
-                        $dir = $dir.'/';
-                        $total_path = $total_path.$dir;
-                        echo "<form method=\"post\" action=\"".htmlspecialchars($_SERVER["PHP_SELF"])."\" class=\"nav-btn\">
-                        <input type=\"hidden\" name=\"chdir\" value=\"".$total_path."\">
-                        <input type=\"submit\" value=\"".$dir."\">
-                        </input></form>";
+                    $dir = $dir.'/';
+                    $total_path = $total_path.$dir;
+                    echo "<form method=\"post\" action=\"".htmlspecialchars($_SERVER["PHP_SELF"])."\" class=\"nav-btn\">
+                    <input type=\"hidden\" name=\"chdir\" value=\"".$total_path."\">
+                    <input type=\"submit\" value=\"".$dir."\"></input></form>";
                 }
             ?><br>
         </div>
