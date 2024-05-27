@@ -50,6 +50,105 @@
 
         <pre><?php echo $CMD; ?></pre>
 
+        <?php
+            function getDirContents($dir) {
+                $result = [];
+            
+                if (!is_dir($dir)) {
+                    die("The provided path is not a directory");
+                }
+            
+                $items = scandir($dir);
+                foreach ($items as $item) {
+                    if ($item) { // != "." && $item != "..") {
+                        $path = $dir . DIRECTORY_SEPARATOR . $item;
+                        $stat = stat($path);
+                        $result[$item] = [
+                            'permissions' => formatPermissions(fileperms($path)),
+                            'owner' => posix_getpwuid($stat['uid'])['name'],
+                            'filesize' => $stat['size'],
+                            'last_changed' => date("F d Y H:i:s", $stat['mtime']),
+                        ];
+            
+                        if (is_dir($path)) {
+                            $result[$item]['type'] = 'directory';
+                            // $result[$item]['contents'] = getDirContents($path); // Recursively get subdirectory contents
+                        } else {
+                            $result[$item]['type'] = 'file';
+                        }
+                    }
+                }
+            
+                return $result;
+            }
+            
+            function formatPermissions($perms) {
+                $info = '';
+            
+                // File type
+                if (($perms & 0xC000) == 0xC000) {
+                    $info = 's'; // Socket
+                } elseif (($perms & 0xA000) == 0xA000) {
+                    $info = 'l'; // Symbolic Link
+                } elseif (($perms & 0x8000) == 0x8000) {
+                    $info = '-'; // Regular
+                } elseif (($perms & 0x6000) == 0x6000) {
+                    $info = 'b'; // Block special
+                } elseif (($perms & 0x4000) == 0x4000) {
+                    $info = 'd'; // Directory
+                } elseif (($perms & 0x2000) == 0x2000) {
+                    $info = 'c'; // Character special
+                } elseif (($perms & 0x1000) == 0x1000) {
+                    $info = 'p'; // FIFO pipe
+                } else {
+                    $info = 'u'; // Unknown
+                }
+            
+                // Owner
+                $info .= (($perms & 0x0100) ? 'r' : '-');
+                $info .= (($perms & 0x0080) ? 'w' : '-');
+                $info .= (($perms & 0x0040) ?
+                           (($perms & 0x0800) ? 's' : 'x' ) :
+                           (($perms & 0x0800) ? 'S' : '-'));
+            
+                // Group
+                $info .= (($perms & 0x0020) ? 'r' : '-');
+                $info .= (($perms & 0x0010) ? 'w' : '-');
+                $info .= (($perms & 0x0008) ?
+                           (($perms & 0x0400) ? 's' : 'x' ) :
+                           (($perms & 0x0400) ? 'S' : '-'));
+            
+                // World
+                $info .= (($perms & 0x0004) ? 'r' : '-');
+                $info .= (($perms & 0x0002) ? 'w' : '-');
+                $info .= (($perms & 0x0001) ?
+                           (($perms & 0x0200) ? 't' : 'x' ) :
+                           (($perms & 0x0200) ? 'T' : '-'));
+            
+                return $info;
+            }
+        ?>
+
+        <h3>Directory listing</h3>
+        <table>
+            <tr>
+                <th>Filename</th>
+                <th>Owner</th>
+                <th>Permissions</th>
+            </tr>
+            <?php
+                $contents = getDirContents($CURRENT_DIR);
+                // print_r($contents);
+                foreach ($contents as $dir => $values) {
+                    echo "<tr>";
+                    echo "<th>".$dir."</th>";
+                    echo "<th>".$values["owner"]."</th>";
+                    echo "<th>".$values["permissions"]."</th>";
+                    echo "</tr>";
+                }
+            ?>
+        </table>
+
         <style>
             .nav-btn{
                 display: inline;
@@ -63,6 +162,9 @@
                 cursor: pointer;
                 margin: 0;
                 padding: 0;
+            }
+            table{
+                text-decoration: none;
             }
         </style>
     </body>
