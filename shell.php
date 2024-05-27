@@ -133,8 +133,11 @@
         <table>
             <tr>
                 <th>Filename</th>
+                <th>Type</th>
+                <th>Filesize</th>
                 <th>Owner</th>
                 <th>Permissions</th>
+                <th>Last changed</th>
             </tr>
             <?php
                 $contents = getDirContents($CURRENT_DIR);
@@ -142,14 +145,20 @@
                 foreach ($contents as $dir => $values) {
                     echo "<tr>";
                     echo "<th>".$dir."</th>";
+                    echo "<th>".$values["type"]."</th>";
+                    echo "<th>".$values["filesize"]."</th>";
                     echo "<th>".$values["owner"]."</th>";
                     echo "<th>".$values["permissions"]."</th>";
+                    echo "<th>".$values["last_changed"]."</th>";
                     echo "</tr>";
                 }
             ?>
         </table>
 
         <style>
+            body{
+                font-family: Helvetica;
+            }
             .nav-btn{
                 display: inline;
             }
@@ -163,8 +172,11 @@
                 margin: 0;
                 padding: 0;
             }
-            table{
-                text-decoration: none;
+            table th{
+                text-align: left;
+                font-weight: normal !important;
+                font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+                padding-right: 25px;
             }
         </style>
     </body>
