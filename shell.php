@@ -48,7 +48,7 @@
             <input type="submit" value="Run">
         </iframe>
 
-        <pre><?php echo $CMD; ?></pre>
+        <pre><?php echo htmlspecialchars($CMD); ?></pre>
 
         <?php
             function getDirContents($dir) {
@@ -158,6 +158,9 @@
         <style>
             body{
                 font-family: Helvetica;
+                /*background-color: black;
+                color: white;
+                text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;*/
             }
             .nav-btn{
                 display: inline;
